@@ -32,10 +32,11 @@ public class ListNotes extends Command {
         final int descLen = note.getContent().length();
         final int headLen = note.getTitle().length();
         final int idlen = String.valueOf(note.getId()).length();
-        final int len = headLen > descLen ? headLen + 2 : descLen + 2;
+        final int baseLen = 10;
+        final int noteLen = headLen > descLen ? headLen + 2 : descLen + 2;
+        final int len = Math.max(baseLen, noteLen);
         final String headspace = getMissing(headLen, len);
         final String descspace = getMissing(descLen, len);
-        // System.out.println(" ┌" + "─".repeat(idlen + 2) + "┐");
         System.out.println(" ┌ID" + "─".repeat(idlen) + "┐");
         System.out.println(" │ " + note.getId() + " │");
         System.out.println("╔╧" + "═".repeat(idlen + 2) + "╧" + "═".repeat(len - (idlen + 4)) + "╗");
