@@ -6,104 +6,140 @@ import org.todoer.client.commands.subcommands.HelpUser;
 import org.todoer.client.commands.subcommands.notes.ListNotes;
 import org.todoer.client.commands.subcommands.notes.ReadNote;
 import org.todoer.client.commands.subcommands.notes.UpdateNote;
+import org.todoer.client.commands.subcommands.todos.CreateTodo;
+import org.todoer.client.commands.subcommands.todos.ListTodos;
+import org.todoer.client.commands.subcommands.todos.ReadTodo;
 
 public enum Commands {
-    /**
-     * The Forward command.
-     * It should have only one argument and it should be a positive number.
-     */
+
     CREATE {
+        String subcommand = "note";
+
         @Override
         public boolean isValidArgs(final String[] args) {
-            return args.length <= 1;
+            boolean isValidLength = args.length <= 1;
+            boolean isValidSubcommand = true;
+            if (args.length != 0) {
+                isValidSubcommand = (args[0].equalsIgnoreCase("note") || args[0].equalsIgnoreCase("todo"));
+                subcommand = args[0];
+            }
+            return isValidLength && isValidSubcommand;
         }
 
         @Override
         public Command construct(final String[] args) {
             if (isValidArgs(args)) {
-                return new CreateNote();
+                return switch (subcommand) {
+                    case ("note") -> new CreateNote();
+                    case ("todo") -> new CreateTodo();
+                    default -> new CreateNote();
+                };
             }
             throw new IllegalArgumentException("Invalid arguments");
         }
     },
 
-    /**
-     * The Back command.
-     * It should have only one argument and it should be a positive number.
-     */
     LIST {
+        String subcommand = "note";
+
         @Override
         public boolean isValidArgs(final String[] args) {
-            return args.length == 0;
+            boolean isValidLength = args.length <= 1;
+            boolean isValidSubcommand = true;
+            if (args.length != 0) {
+                isValidSubcommand = (args[0].equalsIgnoreCase("notes") || args[0].equalsIgnoreCase("todos"));
+                subcommand = args[0];
+            }
+            return isValidLength && isValidSubcommand;
         }
 
         @Override
         public Command construct(final String[] args) {
+            // TODO --Add todo functionality
             if (isValidArgs(args)) {
-                return new ListNotes();
+                return switch (subcommand) {
+                    case ("notes") -> new ListNotes();
+                    case ("todos") -> new ListTodos();
+                    default -> new ListNotes();
+                };
             }
             throw new IllegalArgumentException("Invalid arguments");
         }
     },
 
-    /**
-     * The Turn command.
-     * It should only have one argument
-     * and it should be either "Left" or "Right".
-     */
     READ {
+
+        String subcommand = "note";
+
         @Override
         public boolean isValidArgs(final String[] args) {
-            return args.length == 1;
+            boolean isValidLength = args.length == 2;
+            boolean isValidSubcommand = true;
+            if (isValidLength) {
+                isValidSubcommand = (args[0].equalsIgnoreCase("note") || args[0].equalsIgnoreCase("todo"))
+                        && (args[1].matches("[0-9]+"));
+                subcommand = args[0];
+            }
+            return isValidLength && isValidSubcommand;
         }
 
         @Override
         public Command construct(final String[] args) {
             if (isValidArgs(args)) {
-                return new ReadNote(Long.valueOf(args[0]));
+                return switch (subcommand) {
+                    case ("note") -> new ReadNote(Long.valueOf(args[1]));
+                    case ("todo") -> new ReadTodo(Long.valueOf(args[1]));
+                    default -> new ReadNote(Long.valueOf(args[1]));
+                };
             }
             throw new IllegalArgumentException("Invalid arguments");
         }
     },
 
-    /**
-     * The State command.
-     * It should not have any arguments.
-     */
     UPDATE {
+
         @Override
         public boolean isValidArgs(final String[] args) {
-            return args.length == 1;
+            boolean isValidLength = args.length == 2;
+            boolean isValidSubcommand = true;
+            if (isValidLength) {
+                isValidSubcommand = (args[0].equalsIgnoreCase("note") || args[0].equalsIgnoreCase("todo"))
+                        && (args[1].matches("[0-9]+"));
+            }
+            return isValidLength && isValidSubcommand;
         }
 
         @Override
         public Command construct(final String[] args) {
             if (isValidArgs(args)) {
-                return new UpdateNote(Long.valueOf(args[0]));
+                return new UpdateNote(Long.valueOf(args[0])); // TODO --Add todo support
             }
             throw new IllegalArgumentException("Invalid arguments");
         }
     },
 
-    /**
-     * The Look command.
-     * It should not have any arguments.
-     */
     DELETE {
 
         @Override
         public boolean isValidArgs(final String[] args) {
-            return args.length == 1;
+            boolean isValidLength = args.length == 2;
+            boolean isValidSubcommand = true;
+            if (isValidLength) {
+                isValidSubcommand = (args[0].equalsIgnoreCase("note") || args[0].equalsIgnoreCase("todo"))
+                        && (args[1].matches("[0-9]+"));
+            }
+            return isValidLength && isValidSubcommand;
         }
 
         @Override
         public Command construct(final String[] args) {
             if (isValidArgs(args)) {
-                return new DeleteNote(Long.valueOf(args[0]));
+                return new DeleteNote(Long.valueOf(args[0])); // TODO --Add Todo support
             }
             throw new IllegalArgumentException("Invalid arguments");
         }
     },
+
     HELP {
         @Override
         public boolean isValidArgs(final String[] args) {
