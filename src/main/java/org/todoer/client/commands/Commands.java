@@ -1,11 +1,11 @@
 package org.todoer.client.commands;
 
-import org.todoer.client.commands.subcommands.CreateNote;
-import org.todoer.client.commands.subcommands.DeleteNote;
+import org.todoer.client.commands.subcommands.notes.CreateNote;
+import org.todoer.client.commands.subcommands.notes.DeleteNote;
 import org.todoer.client.commands.subcommands.HelpUser;
-import org.todoer.client.commands.subcommands.ListNotes;
-import org.todoer.client.commands.subcommands.ReadNote;
-import org.todoer.client.commands.subcommands.UpdateNote;
+import org.todoer.client.commands.subcommands.notes.ListNotes;
+import org.todoer.client.commands.subcommands.notes.ReadNote;
+import org.todoer.client.commands.subcommands.notes.UpdateNote;
 
 public enum Commands {
     /**

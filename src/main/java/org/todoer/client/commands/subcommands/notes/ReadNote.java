@@ -1,4 +1,4 @@
-package org.todoer.client.commands.subcommands;
+package org.todoer.client.commands.subcommands.notes;
 
 import java.sql.SQLException;
 
