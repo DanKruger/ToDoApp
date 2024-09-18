@@ -5,18 +5,37 @@ import java.text.MessageFormat;
 
 import org.todoer.database.schemas.TodoSchema;
 
+/**
+ * Todo Data Object
+ * Contains the structure of a Todo entry in the database
+ */
 public class Todo {
+    /** The Generated ID */
     private long id;
+    /** The Title of the Todo */
     private String title;
+    /** The Content or Description of the Todo */
     private String content;
+    /** {@link Boolean a boolean} value indicating the completion status */
     private boolean complete = false;
 
+    /**
+     * Create a new Todo object
+     * 
+     * @param title   {@link #title}
+     * @param content {@link #content}
+     */
     public Todo(final String title, final String content) {
         this.id = 1L + (long) (Math.random() * (10L - 1L));
         this.title = title;
         this.content = content;
     }
 
+    /**
+     * Create a new Todo object from Schema
+     * 
+     * @param schema {@link TodoSchema the schema}
+     */
     public Todo(final TodoSchema schema) {
         this.id = schema.getId();
         this.title = schema.getTitle();
@@ -52,8 +71,9 @@ public class Todo {
         return MessageFormat.format("Todo'{'id={0}, title=''{1}'', content=''{2}'''}'", id, title, content);
     }
 
+    /** @return A formatted string to look nice */
     public String format() {
-        String cTitle = complete ? "\033[9m" + title + "\033[0m" : title;
+        final String cTitle = complete ? "\033[9m" + title + "\033[0m" : title;
         return MessageFormat.format("{0}. [{1}] {2}", id, complete ? "X" : " ", cTitle);
     }
 

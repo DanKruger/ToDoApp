@@ -4,17 +4,35 @@ import java.text.MessageFormat;
 
 import org.todoer.database.schemas.NoteSchema;
 
+/**
+ * Note Data Object
+ * Contains the structure of a Note entr in the database
+ */
 public class Note {
+    /** The Generated ID */
     private long id;
+    /** The Title of the Note */
     private String title;
+    /** The Content or Description of the Note */
     private String content;
 
+    /**
+     * Create a new Note Object
+     * 
+     * @param title   {@link #title}
+     * @param content {@link #content}
+     */
     public Note(final String title, final String content) {
         this.id = 1L + (long) (Math.random() * (10L - 1L));
         this.title = title;
         this.content = content;
     }
 
+    /**
+     * Create a new Note Object from a schema
+     * 
+     * @param schema {@link NoteSchema the schema}
+     */
     public Note(final NoteSchema schema) {
         this.id = schema.getId();
         this.title = schema.getTitle();
@@ -41,6 +59,7 @@ public class Note {
         return MessageFormat.format("Note'{'id={0}, title=''{1}'', content=''{2}'''}'", id, title, content);
     }
 
+    /** @return A formatted string to look nice */
     public String format() {
         return MessageFormat.format("ID: {0}\nTitle:\n    {1}\nDesription:\n    {2}", id, title, content);
     }
