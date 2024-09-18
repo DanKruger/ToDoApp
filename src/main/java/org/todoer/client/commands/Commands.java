@@ -7,6 +7,7 @@ import org.todoer.client.commands.subcommands.notes.ListNotes;
 import org.todoer.client.commands.subcommands.notes.ReadNote;
 import org.todoer.client.commands.subcommands.notes.UpdateNote;
 import org.todoer.client.commands.subcommands.todos.CreateTodo;
+import org.todoer.client.commands.subcommands.todos.DeleteTodo;
 import org.todoer.client.commands.subcommands.todos.ListTodos;
 import org.todoer.client.commands.subcommands.todos.ReadTodo;
 import org.todoer.client.commands.subcommands.todos.UpdateTodo;
@@ -126,6 +127,7 @@ public enum Commands {
     },
 
     DELETE {
+        String subcommand = "note";
 
         @Override
         public boolean isValidArgs(final String[] args) {
@@ -134,6 +136,7 @@ public enum Commands {
             if (isValidLength) {
                 isValidSubcommand = (args[0].equalsIgnoreCase("note") || args[0].equalsIgnoreCase("todo"))
                         && (args[1].matches("[0-9]+"));
+                subcommand = args[0];
             }
             return isValidLength && isValidSubcommand;
         }
@@ -141,7 +144,11 @@ public enum Commands {
         @Override
         public Command construct(final String[] args) {
             if (isValidArgs(args)) {
-                return new DeleteNote(Long.valueOf(args[0])); // TODO --Add Todo support
+                return switch (subcommand) {
+                    case ("note") -> new DeleteNote(Long.valueOf(args[1]));
+                    case ("todo") -> new DeleteTodo(Long.valueOf(args[1]));
+                    default -> new DeleteNote(Long.valueOf(args[1]));
+                };
             }
             throw new IllegalArgumentException("Invalid arguments");
         }
