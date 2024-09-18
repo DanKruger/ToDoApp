@@ -9,6 +9,7 @@ import org.todoer.client.commands.subcommands.notes.UpdateNote;
 import org.todoer.client.commands.subcommands.todos.CreateTodo;
 import org.todoer.client.commands.subcommands.todos.ListTodos;
 import org.todoer.client.commands.subcommands.todos.ReadTodo;
+import org.todoer.client.commands.subcommands.todos.UpdateTodo;
 
 public enum Commands {
 
@@ -97,6 +98,7 @@ public enum Commands {
     },
 
     UPDATE {
+        String subcommand = "note";
 
         @Override
         public boolean isValidArgs(final String[] args) {
@@ -105,6 +107,7 @@ public enum Commands {
             if (isValidLength) {
                 isValidSubcommand = (args[0].equalsIgnoreCase("note") || args[0].equalsIgnoreCase("todo"))
                         && (args[1].matches("[0-9]+"));
+                subcommand = args[0];
             }
             return isValidLength && isValidSubcommand;
         }
@@ -112,7 +115,11 @@ public enum Commands {
         @Override
         public Command construct(final String[] args) {
             if (isValidArgs(args)) {
-                return new UpdateNote(Long.valueOf(args[0])); // TODO --Add todo support
+                return switch (subcommand) {
+                    case ("note") -> new UpdateNote(Long.valueOf(args[1]));
+                    case ("todo") -> new UpdateTodo(Long.valueOf(args[1]));
+                    default -> new ReadNote(Long.valueOf(args[1]));
+                };
             }
             throw new IllegalArgumentException("Invalid arguments");
         }
