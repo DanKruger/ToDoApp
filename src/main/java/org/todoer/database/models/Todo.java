@@ -53,7 +53,8 @@ public class Todo {
     }
 
     public String format() {
-        return MessageFormat.format("{0} [{1}] {2}", id, complete ? "X" : " ", title);
+        String cTitle = complete ? "\033[9m" + title + "\033[0m" : title;
+        return MessageFormat.format("{0}. [{1}] {2}", id, complete ? "X" : " ", cTitle);
     }
 
     public void setId(final long id) {
