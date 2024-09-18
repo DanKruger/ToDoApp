@@ -1,13 +1,17 @@
 package org.todoer.client;
 
-import java.util.Arrays;
-import java.util.Scanner;
-
 import org.todoer.client.commands.Command;
 import org.todoer.client.commands.Commands;
 
+import java.util.Arrays;
+import java.util.Scanner;
+
 public class ClientInterface {
     private static Scanner scanner;
+
+    public ClientInterface() {
+        scanner = new Scanner(System.in);
+    }
 
     public static String getInput(final String prompt) {
         System.out.print(prompt);
@@ -15,10 +19,6 @@ public class ClientInterface {
             return scanner.nextLine();
         }
         return "quit";
-    }
-
-    public ClientInterface() {
-        scanner = new Scanner(System.in);
     }
 
     @Override
@@ -32,7 +32,7 @@ public class ClientInterface {
 
     private void inputLoop() {
         System.out.println("Welcome");
-        String input = " ";
+        String input;
         do {
             input = getInput("\033[32mcommand:\033[0m ");
             validateInput(input);
