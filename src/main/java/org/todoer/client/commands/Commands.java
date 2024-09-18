@@ -1,29 +1,30 @@
 package org.todoer.client.commands;
 
-import org.todoer.client.commands.subcommands.notes.CreateNote;
-import org.todoer.client.commands.subcommands.notes.DeleteNote;
 import org.todoer.client.commands.subcommands.HelpUser;
-import org.todoer.client.commands.subcommands.notes.ListNotes;
-import org.todoer.client.commands.subcommands.notes.ReadNote;
-import org.todoer.client.commands.subcommands.notes.UpdateNote;
-import org.todoer.client.commands.subcommands.todos.CreateTodo;
-import org.todoer.client.commands.subcommands.todos.DeleteTodo;
-import org.todoer.client.commands.subcommands.todos.ListTodos;
-import org.todoer.client.commands.subcommands.todos.ReadTodo;
-import org.todoer.client.commands.subcommands.todos.UpdateTodo;
+import org.todoer.client.commands.subcommands.notes.*;
+import org.todoer.client.commands.subcommands.todos.*;
 
+/**
+ * Contains command definitions and constraints
+ */
 public enum Commands {
 
+    /**
+     * Create command
+     * supports todos and notes
+     */
     CREATE {
         String subcommand = "note";
 
         @Override
         public boolean isValidArgs(final String[] args) {
-            boolean isValidLength = args.length <= 1;
+            final boolean isValidLength = args.length <= 1;
             boolean isValidSubcommand = true;
             if (args.length != 0) {
-                isValidSubcommand = (args[0].equalsIgnoreCase("note") || args[0].equalsIgnoreCase("todo"));
-                subcommand = args[0];
+                String string = args[0];
+                isValidSubcommand = (string.equalsIgnoreCase("note")
+                                    || string.equalsIgnoreCase("todo"));
+                subcommand = string;
             }
             return isValidLength && isValidSubcommand;
         }
@@ -31,112 +32,29 @@ public enum Commands {
         @Override
         public Command construct(final String[] args) {
             if (isValidArgs(args)) {
-                return switch (subcommand) {
-                    case ("note") -> new CreateNote();
-                    case ("todo") -> new CreateTodo();
-                    default -> new CreateNote();
-                };
+                if (subcommand.equals("todo")) return new CreateTodo();
+                return new CreateNote();
             }
             throw new IllegalArgumentException("Invalid arguments");
         }
     },
 
-    LIST {
-        String subcommand = "note";
-
-        @Override
-        public boolean isValidArgs(final String[] args) {
-            boolean isValidLength = args.length <= 1;
-            boolean isValidSubcommand = true;
-            if (args.length != 0) {
-                isValidSubcommand = (args[0].equalsIgnoreCase("notes") || args[0].equalsIgnoreCase("todos"));
-                subcommand = args[0];
-            }
-            return isValidLength && isValidSubcommand;
-        }
-
-        @Override
-        public Command construct(final String[] args) {
-            // TODO --Add todo functionality
-            if (isValidArgs(args)) {
-                return switch (subcommand) {
-                    case ("notes") -> new ListNotes();
-                    case ("todos") -> new ListTodos();
-                    default -> new ListNotes();
-                };
-            }
-            throw new IllegalArgumentException("Invalid arguments");
-        }
-    },
-
-    READ {
-
-        String subcommand = "note";
-
-        @Override
-        public boolean isValidArgs(final String[] args) {
-            boolean isValidLength = args.length == 2;
-            boolean isValidSubcommand = true;
-            if (isValidLength) {
-                isValidSubcommand = (args[0].equalsIgnoreCase("note") || args[0].equalsIgnoreCase("todo"))
-                        && (args[1].matches("[0-9]+"));
-                subcommand = args[0];
-            }
-            return isValidLength && isValidSubcommand;
-        }
-
-        @Override
-        public Command construct(final String[] args) {
-            if (isValidArgs(args)) {
-                return switch (subcommand) {
-                    case ("note") -> new ReadNote(Long.valueOf(args[1]));
-                    case ("todo") -> new ReadTodo(Long.valueOf(args[1]));
-                    default -> new ReadNote(Long.valueOf(args[1]));
-                };
-            }
-            throw new IllegalArgumentException("Invalid arguments");
-        }
-    },
-
-    UPDATE {
-        String subcommand = "note";
-
-        @Override
-        public boolean isValidArgs(final String[] args) {
-            boolean isValidLength = args.length == 2;
-            boolean isValidSubcommand = true;
-            if (isValidLength) {
-                isValidSubcommand = (args[0].equalsIgnoreCase("note") || args[0].equalsIgnoreCase("todo"))
-                        && (args[1].matches("[0-9]+"));
-                subcommand = args[0];
-            }
-            return isValidLength && isValidSubcommand;
-        }
-
-        @Override
-        public Command construct(final String[] args) {
-            if (isValidArgs(args)) {
-                return switch (subcommand) {
-                    case ("note") -> new UpdateNote(Long.valueOf(args[1]));
-                    case ("todo") -> new UpdateTodo(Long.valueOf(args[1]));
-                    default -> new ReadNote(Long.valueOf(args[1]));
-                };
-            }
-            throw new IllegalArgumentException("Invalid arguments");
-        }
-    },
-
+    /**
+     * Delete command
+     * supports todos and notes
+     */
     DELETE {
         String subcommand = "note";
 
         @Override
         public boolean isValidArgs(final String[] args) {
-            boolean isValidLength = args.length == 2;
+            final boolean isValidLength = args.length == 2;
             boolean isValidSubcommand = true;
             if (isValidLength) {
-                isValidSubcommand = (args[0].equalsIgnoreCase("note") || args[0].equalsIgnoreCase("todo"))
+                String string = args[0];
+                isValidSubcommand = (string.equalsIgnoreCase("note") || string.equalsIgnoreCase("todo"))
                         && (args[1].matches("[0-9]+"));
-                subcommand = args[0];
+                subcommand = string;
             }
             return isValidLength && isValidSubcommand;
         }
@@ -144,16 +62,17 @@ public enum Commands {
         @Override
         public Command construct(final String[] args) {
             if (isValidArgs(args)) {
-                return switch (subcommand) {
-                    case ("note") -> new DeleteNote(Long.valueOf(args[1]));
-                    case ("todo") -> new DeleteTodo(Long.valueOf(args[1]));
-                    default -> new DeleteNote(Long.valueOf(args[1]));
-                };
+                if(subcommand.equals("todo")) return new DeleteTodo(Long.parseLong(args[1]));
+                return new DeleteNote(Long.parseLong(args[1]));
             }
             throw new IllegalArgumentException("Invalid arguments");
         }
     },
 
+    /**
+     * The help command
+     * prints out usage information to the terminal
+     */
     HELP {
         @Override
         public boolean isValidArgs(final String[] args) {
@@ -165,6 +84,96 @@ public enum Commands {
             return new HelpUser();
         }
 
+    },
+
+    /**
+     * List command
+     * supports todos and notes
+     */
+    LIST {
+        String subcommand = "note";
+
+        @Override
+        public boolean isValidArgs(final String[] args) {
+            final boolean isValidLength = args.length <= 1;
+            boolean isValidSubcommand = true;
+            if (args.length != 0) {
+                String string = args[0];
+                isValidSubcommand = (string.equalsIgnoreCase("notes") || string.equalsIgnoreCase("todos"));
+                subcommand = string;
+            }
+            return isValidLength && isValidSubcommand;
+        }
+
+        @Override
+        public Command construct(final String[] args) {
+            if (isValidArgs(args)) {
+                if (subcommand.equals("todos")) return new ListTodos();
+                return new ListNotes();
+            }
+            throw new IllegalArgumentException("Invalid arguments");
+        }
+    },
+
+    /**
+     * Read command
+     * Supports todos and notes
+     */
+    READ {
+
+        String subcommand = "note";
+
+        @Override
+        public boolean isValidArgs(final String[] args) {
+            final boolean isValidLength = args.length == 2;
+            boolean isValidSubcommand = true;
+            if (isValidLength) {
+                String string = args[0];
+                isValidSubcommand = (string.equalsIgnoreCase("note") || string.equalsIgnoreCase("todo"))
+                        && (args[1].matches("[0-9]+"));
+                subcommand = string;
+            }
+            return isValidLength && isValidSubcommand;
+        }
+
+        @Override
+        public Command construct(final String[] args) {
+            if (isValidArgs(args)) {
+                if (subcommand.equalsIgnoreCase("todo")) return new ReadTodo(Long.parseLong(args[1]));
+                return new ReadNote(Long.parseLong(args[1]));
+            }
+            throw new IllegalArgumentException("Invalid arguments");
+        }
+    },
+
+    /**
+     * Update command
+     * supports todos and notes
+     */
+    UPDATE {
+        String subcommand = "note";
+
+        @Override
+        public boolean isValidArgs(final String[] args) {
+            final boolean isValidLength = args.length == 2;
+            boolean isValidSubcommand = true;
+            if (isValidLength) {
+                String string = args[0];
+                isValidSubcommand = (string.equalsIgnoreCase("note") || string.equalsIgnoreCase("todo"))
+                        && (args[1].matches("[0-9]+"));
+                subcommand = string;
+            }
+            return isValidLength && isValidSubcommand;
+        }
+
+        @Override
+        public Command construct(final String[] args) {
+            if (isValidArgs(args)) {
+                if(subcommand.equalsIgnoreCase("todo")) return new UpdateTodo(Long.parseLong(args[1]));
+                return new UpdateNote(Long.parseLong(args[1]));
+            }
+            throw new IllegalArgumentException("Invalid arguments");
+        }
     };
 
     /**
