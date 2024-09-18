@@ -1,12 +1,12 @@
 package org.todoer.client.commands.subcommands.todos;
 
-import java.sql.SQLException;
-import java.text.MessageFormat;
-
 import org.todoer.client.ClientInterface;
 import org.todoer.client.commands.Command;
 import org.todoer.database.models.Todo;
 import org.todoer.main.App;
+
+import java.sql.SQLException;
+import java.text.MessageFormat;
 
 /**
  * CreateTodo
@@ -14,7 +14,7 @@ import org.todoer.main.App;
 public class CreateTodo extends Command {
 
     public CreateTodo() {
-        super("create", "creates a new Todo");
+        super("create", "creates a new Todo", TYPE.TODOS);
     }
 
     public boolean execute() {

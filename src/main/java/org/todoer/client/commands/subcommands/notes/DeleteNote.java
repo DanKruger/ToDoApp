@@ -12,7 +12,7 @@ public class DeleteNote extends Command {
     private final long id;
 
     public DeleteNote(final long id) {
-        super("delete", "remove a note from the database");
+        super("delete", "remove a note from the database",TYPE.NOTES);
         this.id = id;
     }
 

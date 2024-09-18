@@ -1,12 +1,12 @@
 package org.todoer.client.commands.subcommands.todos;
 
-import java.sql.SQLException;
-
 import org.todoer.client.ClientInterface;
 import org.todoer.client.commands.Command;
 import org.todoer.database.DatabaseManager;
 import org.todoer.database.models.Todo;
 import org.todoer.main.App;
+
+import java.sql.SQLException;
 
 /**
  * DeleteTodo
@@ -15,7 +15,7 @@ public class DeleteTodo extends Command {
     private final long id;
 
     public DeleteTodo(final long id) {
-        super("delete", "deletes a todo from the database");
+        super("delete", "deletes a todo from the database",TYPE.TODOS);
         this.id = id;
     }
 

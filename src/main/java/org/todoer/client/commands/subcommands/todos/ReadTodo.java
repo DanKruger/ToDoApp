@@ -1,20 +1,20 @@
 package org.todoer.client.commands.subcommands.todos;
 
-import java.sql.SQLException;
-import java.text.MessageFormat;
-
 import org.todoer.client.commands.Command;
 import org.todoer.database.models.Todo;
 import org.todoer.main.App;
+
+import java.sql.SQLException;
+import java.text.MessageFormat;
 
 /**
  * ReadTodo
  */
 public class ReadTodo extends Command {
-    private long id;
+    private final long id;
 
     public ReadTodo(long id) {
-        super("read", "Read the information of a todo item");
+        super("read", "Read the information of a todo item",TYPE.TODOS);
         this.id = id;
 
     }

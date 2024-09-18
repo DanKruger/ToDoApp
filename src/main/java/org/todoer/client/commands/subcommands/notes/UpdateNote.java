@@ -4,6 +4,7 @@ import java.sql.SQLException;
 
 import org.todoer.client.ClientInterface;
 import org.todoer.client.commands.Command;
+import org.todoer.database.DatabaseManager;
 import org.todoer.database.models.Note;
 import org.todoer.main.App;
 
@@ -11,13 +12,14 @@ public class UpdateNote extends Command {
     private final long id;
 
     public UpdateNote(final long id) {
-        super("update", "Update the note with the given id");
+        super("update", "Update the note with the given id", TYPE.NOTES);
         this.id = id;
     }
 
     public boolean execute() {
         try {
-            final Note noteFromDb = App.getServer().getDb().readNote(id);
+            DatabaseManager db = App.getServer().getDb();
+            final Note noteFromDb = db.readNote(id);
             final String change = ClientInterface
                     .getInput("What would you like to edit?\n1: Title\n2: Description\n3: Cancel\n");
             if (change.equalsIgnoreCase("3"))
@@ -33,7 +35,7 @@ public class UpdateNote extends Command {
                 System.out.println("New Description:\n " + noteFromDb.getContent());
             }
             new ListNotes().drawBox(noteFromDb);
-            App.getServer().getDb().updateNote(noteFromDb);
+            db.updateNote(noteFromDb);
         } catch (final SQLException e) {
             e.printStackTrace();
         }

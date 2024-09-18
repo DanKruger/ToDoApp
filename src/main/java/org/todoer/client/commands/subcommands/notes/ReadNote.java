@@ -10,7 +10,7 @@ public class ReadNote extends Command {
     private long id;
 
     public ReadNote(long id) {
-        super("read", "Retrieves the note with the specified ID");
+        super("read", "Retrieves the note with the specified ID", TYPE.NOTES);
         this.id = id;
     }
 

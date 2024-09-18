@@ -4,8 +4,7 @@ import java.sql.SQLException;
 
 import org.todoer.client.ClientInterface;
 import org.todoer.client.commands.Command;
-import org.todoer.client.commands.subcommands.notes.ListNotes;
-import org.todoer.database.models.Note;
+import org.todoer.database.DatabaseManager;
 import org.todoer.database.models.Todo;
 import org.todoer.main.App;
 
@@ -15,20 +14,21 @@ import org.todoer.main.App;
 public class UpdateTodo extends Command {
     private final long id;
 
-    public UpdateTodo(long id) {
-        super("update", "update a todo");
+    public UpdateTodo(final long id) {
+        super("update", "update a todo",TYPE.TODOS);
         this.id = id;
     }
 
     public boolean execute() {
         try {
-            final Todo todoFromDb = App.getServer().getDb().readTodo(id);
+            DatabaseManager db = App.getServer().getDb();
+            final Todo todoFromDb = db.readTodo(id);
             final String change = ClientInterface
                     .getInput("What would you like to edit?\n0: Toggle Done\n1: Title\n2: Description\n3: Cancel\n");
             if (change.equalsIgnoreCase("3"))
                 return false;
             if (change.equalsIgnoreCase("0")) {
-                boolean done = todoFromDb.isComplete() ? false : true;
+                final boolean done = !todoFromDb.isComplete();
                 todoFromDb.setComplete(done);
             }
             if (change.equalsIgnoreCase("1")) {
@@ -41,7 +41,7 @@ public class UpdateTodo extends Command {
                 todoFromDb.setContent(newDesc.isEmpty() ? "Empty" : newDesc);
                 System.out.println("New Description:\n " + todoFromDb.getContent());
             }
-            App.getServer().getDb().updateTodo(todoFromDb);
+            db.updateTodo(todoFromDb);
             new ReadTodo(id).execute();
         } catch (final SQLException e) {
             e.printStackTrace();

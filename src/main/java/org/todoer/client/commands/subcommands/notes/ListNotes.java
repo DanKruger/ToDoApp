@@ -8,7 +8,7 @@ import org.todoer.main.App;
 
 public class ListNotes extends Command {
     public ListNotes() {
-        super("list", "List all notes in the database");
+        super("list", "List all notes in the database",TYPE.NOTES);
     }
 
     @Override
@@ -28,30 +28,36 @@ public class ListNotes extends Command {
         return false;
     }
 
-    public void drawBox(final Note note) {
-        final int descLen = note.getContent().length();
-        final int headLen = note.getTitle().length();
-        final int idlen = String.valueOf(note.getId()).length();
-        final int baseLen = 10;
-        final int noteLen = headLen > descLen ? headLen + 2 : descLen + 2;
-        final int len = Math.max(baseLen, noteLen);
-        final String headspace = getMissing(headLen, len);
-        final String descspace = getMissing(descLen, len);
-        System.out.println(" ┌ID" + "─".repeat(idlen) + "┐");
-        System.out.println(" │ " + note.getId() + " │");
-        System.out.println("╔╧" + "═".repeat(idlen + 2) + "╧" + "═".repeat(len - (idlen + 4)) + "╗");
-        System.out.println("║" + note.getTitle() + headspace + "║");
-        System.out.println("╟" + "─".repeat(len) + "╢");
-        System.out.println("║" + note.getContent() + descspace + "║");
-        System.out.println("╚" + "═".repeat(len) + "╝");
-    }
 
+    public void drawBox(final Note note){
+        final String title = note.getTitle();
+        final String content = note.getContent();
+        final long id = note.getId();
+
+        final int titleLen= title.length();
+        final int contentLen = content.length();
+        final int idLen = String.valueOf(id).length();
+        final int baseLen = 10;
+
+        final int noteLen = Math.max(titleLen, contentLen) + 2;
+        final int len = Math.max(baseLen, noteLen);
+
+        final String titlePadding = getMissing(titleLen,len);
+        final String contentPadding = getMissing(contentLen,len);
+
+        String boxBuilder = " ┌ID" + "─".repeat(idLen) + "┐\n" +
+                " │ " + id + " │\n" +
+                "╔╧" + "═".repeat(idLen + 2) + "╧" + "═".repeat(len - (idLen + 4)) + "╗\n" +
+                "║" + title + titlePadding + "║\n" +
+                "╟" + "─".repeat(len) + "╢\n" +
+                "║" + content + contentPadding + "║\n" +
+                "╚" + "═".repeat(len) + "╝\n";
+
+        // Output the box
+        System.out.println(boxBuilder);
+    }
     private String getMissing(final int one, final int two) {
-        if (one > two)
-            return " ".repeat(getLen(one, two));
-        if (one < two)
-            return " ".repeat(getLen(one, two));
-        return "";
+        return one > two || one < two ? " ".repeat(getLen(one, two)) : "";
     }
 
     private int getLen(final int one, final int two) {

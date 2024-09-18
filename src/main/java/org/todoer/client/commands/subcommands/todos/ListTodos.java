@@ -1,10 +1,10 @@
 package org.todoer.client.commands.subcommands.todos;
 
-import java.sql.SQLException;
-
 import org.todoer.client.commands.Command;
 import org.todoer.database.models.Todo;
 import org.todoer.main.App;
+
+import java.sql.SQLException;
 
 /**
  * ListTodos
@@ -12,7 +12,7 @@ import org.todoer.main.App;
 public class ListTodos extends Command {
 
     public ListTodos() {
-        super("list", "list all todos");
+        super("list", "list all todos",TYPE.TODOS);
 
     }
 
