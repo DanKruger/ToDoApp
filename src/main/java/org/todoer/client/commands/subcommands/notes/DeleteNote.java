@@ -4,6 +4,7 @@ import java.sql.SQLException;
 
 import org.todoer.client.ClientInterface;
 import org.todoer.client.commands.Command;
+import org.todoer.database.DatabaseManager;
 import org.todoer.database.models.Note;
 import org.todoer.main.App;
 
@@ -17,14 +18,15 @@ public class DeleteNote extends Command {
 
     public boolean execute() {
         try {
-            final Note noteFromDb = App.getServer().getDb().readNote(id);
+            final DatabaseManager db = App.getServer().getDb();
+            final Note noteFromDb = db.readNote(id);
             new ListNotes().drawBox(noteFromDb);
             final String confirm = ClientInterface.getInput("Are you sure you want to delete this note? (y/N): ");
             if (!confirm.equalsIgnoreCase("y")) {
                 System.out.println("Deletion Cancelled");
                 return false;
             } else {
-                App.getServer().getDb().deleteNote(noteFromDb);
+                db.deleteNote(noteFromDb);
                 System.out.println("Note deleted");
             }
         } catch (NullPointerException | SQLException e) {
