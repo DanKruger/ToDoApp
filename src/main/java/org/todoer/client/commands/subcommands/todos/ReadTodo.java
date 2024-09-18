@@ -23,7 +23,7 @@ public class ReadTodo extends Command {
         try {
             Todo todo = App.getServer().getDb().readTodo(id);
             System.out.println(
-                    MessageFormat.format("\nID: {0}\nStatus: {3}\n\nTitle:\n\n    {1}\n\nDescription:\n\n    {2}\n\n",
+                    MessageFormat.format("ID: {0}\nStatus: {3}\n\nT: {1}\n\nD: {2}\n",
                             todo.getId(), todo.getTitle(), todo.getContent(), todo.isComplete() ? "Done" : "To Do"));
             return true;
         } catch (NullPointerException | SQLException e) {
